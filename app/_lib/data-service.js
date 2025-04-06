@@ -67,23 +67,6 @@ export async function createComment(obj) {
     throw new Error("comment could not be created");
   }
 }
-// export async function createComment(obj) {
-//   console.log(obj.content);
-//   try {
-//     const comment = await axios({
-//       method: "post",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       data: JSON.stringify(obj),
-//       url: "https://interactive-comment-backend.vercel.app/api/v2/comments",
-//     });
-
-//     return comment;
-//   } catch {
-//     throw new Error("comment could not be created");
-//   }
-// }
 
 export async function replyComment(obj) {
   try {
