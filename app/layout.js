@@ -6,8 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { ReplyToProvider } from "./_lib/hooks/useReplyTo";
 export const metadata = {
   title: {
-    template: "%s / The Interactive comment section",
-    default: "welcome/The interactive comment section",
+    template: "%s /  Interactive comment section",
+    default: "welcome/interactive comment section",
   },
   description: "A real time interactive comment section. ",
 };
