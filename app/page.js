@@ -12,7 +12,7 @@ export default async function Page() {
   const user = await auth();
   const userEmail = user?.user?.email;
   return (
-    <main className="mt-24">
+    <main className="mt-16">
       <ul className=" w-2/3 mx-auto h-auto mobile:w-5/6">
         {comments?.map((com, i) => (
           <Suspense fallback={<Spinner />} key={i}>
