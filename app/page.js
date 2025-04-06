@@ -13,7 +13,7 @@ export default async function Page() {
   const userEmail = user?.user?.email;
   return (
     <main className="mt-24">
-      <ul className=" w-2/3 mx-auto h-auto">
+      <ul className=" w-2/3 mx-auto h-auto mobile:w-5/6">
         {comments?.map((com, i) => (
           <Suspense fallback={<Spinner />} key={i}>
             <CommentBox
