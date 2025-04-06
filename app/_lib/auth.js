@@ -3,7 +3,7 @@ import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
 import LinkedIn from "next-auth/providers/linkedin";
 import Twitter from "next-auth/providers/twitter";
-import { createGuest, getGuest } from "./data-service";
+import { createUser, getUserByEmail } from "./data-service";
 const authConfig = {
   providers: [
     Google({
@@ -31,18 +31,24 @@ const authConfig = {
 
     async signIn({ user, profile, account }) {
       try {
-        const existingGuest = await getGuest(user.email);
+        const existinguser = await getUserByEmail(user.email);
+        console.log(existinguser);
 
-        if (!existingGuest)
-          await createGuest({ fullName: user.name, email: user.email });
+        if (!existinguser.data.user)
+          await createUser({
+            name: user.name,
+            email: user.email,
+            photo: user.image,
+          });
         return true;
-      } catch {
-        return false;
+      } catch (er) {
+        console.log(err);
       }
     },
     async session({ session, user }) {
-      const guest = await getGuest(session.user.email);
-      session.user.guestId = guest.id;
+      const loggedInUser = await getUserByEmail(session.user.email);
+
+      session.user.id = loggedInUser.data.user._id;
       return session;
     },
   },

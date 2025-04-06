@@ -1,19 +1,12 @@
 import Image from "next/image";
 import { signIn } from "../_lib/auth";
-import {
-  signInAction,
-  signInActionGithub,
-  signInActionLinkedin,
-  signInActionTwitter,
-} from "../serverActions/actions";
+import { signInAction, signInActionGithub } from "../serverActions/actions";
 
 function SignInButton() {
   return (
     <>
       <SignInForm provider="google" serveraction={signInAction} />
       <SignInForm provider="github" serveraction={signInActionGithub} />
-      <SignInForm provider="linkedin" serveraction={signInActionLinkedin} />
-      <SignInForm provider="twitter" serveraction={signInActionTwitter} />
     </>
   );
 }

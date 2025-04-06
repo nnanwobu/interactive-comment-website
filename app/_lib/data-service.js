@@ -1,242 +1,154 @@
 import { eachDayOfInterval } from "date-fns";
-import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
+import axios from "axios";
 
 /////////////
 // GET
 
 // "https://restcountries.com/v2/all?fields=name,flag"
 
-export async function getCabin(id) {
-  const { data, error } = await supabase
-    .from("cabins")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
-
-  if (error) {
-    console.error(error);
-    notFound();
-  }
-
-  return data;
-}
-
-export async function getCabinPrice(id) {
-  const { data, error } = await supabase
-    .from("cabins")
-    .select("regularPrice, discount")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    console.error(error);
-    notFound();
-  }
-
-  return data;
-}
-
-export const getCabins = async function () {
-  const { data, error } = await supabase
-    .from("cabins")
-    .select("id, name, maxCapacity, regularPrice, discount, image")
-    .order("name");
-
-  if (error) {
-    console.error(error);
-    throw new Error("Cabins could not be loaded");
-  }
-
-  return data;
-};
-/**
- * @param {string} email -guest's email
- */
-// Guests are uniquely identified by their email address
-
-export async function getGuest(email) {
-  const { data, error } = await supabase
-    .from("guests")
-    .select("*")
-    .eq("email", email)
-    .single();
-
-  // No error here! We handle the possibility of no guest in the sign in callback
-  return data;
-}
-/**
- *
- * @param {number} id -the booking id of the guest
- * @returns {object}
- */
-export async function getBooking(id) {
-  const { data, error, count } = await supabase
-    .from("bookings")
-    .select(
-      "*,cabins!bookings_cabinId_fkey(name, image,maxCapacity),guests(nationalID)"
-    )
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not get loaded");
-  }
-
-  return data;
-}
-
-export async function getBookings(guestId) {
-  const { data, error, count } = await supabase
-    .from("bookings")
-    // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
-    .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId,hasBreakfast,isPaid,status,observations,cabinPrice,cabins!bookings_cabinId_fkey(name, image,maxCapacity),guests(nationalID)"
-    )
-    .eq("guestId", guestId)
-    .order("startDate");
-
-  if (error) {
-    console.error(error);
-    throw new Error("Bookings could not get loaded");
-  }
-
-  return data;
-}
-
-export async function getBookedDatesByCabinId(cabinId) {
-  let today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
-  today = today.toISOString();
-
-  // Getting all bookings
-  const { data, error } = await supabase
-    .from("bookings")
-    .select("*")
-    .eq("cabinId", cabinId)
-    .or(`startDate.gte.${today},status.eq.checked-in`);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Bookings could not get loaded");
-  }
-
-  // Converting to actual dates to be displayed in the date picker
-  const bookedDates = data
-    .map((booking) => {
-      return eachDayOfInterval({
-        start: new Date(booking.startDate),
-        end: new Date(booking.endDate),
-      });
-    })
-    .flat();
-
-  return bookedDates;
-}
-
-export async function getSettings() {
-  const { data, error } = await supabase.from("settings").select("*").single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Settings could not be loaded");
-  }
-
-  return data;
-}
-
-export async function getCountries() {
+export async function getComments() {
   try {
     const res = await fetch(
-      "https://restcountries.com/v2/all?fields=name,flag"
+      "https://interactive-comment-backend.vercel.app/api/v2/comments"
     );
-    const countries = await res.json();
+    // const res = await fetch(
+    //   "https://interactive-comment.onrender.com/api/v2/comments"
+    // );
 
-    return countries;
+    const data = await res.json();
+
+    const comments = data.data.comments;
+    return comments;
   } catch {
-    throw new Error("Could not fetch countries");
+    throw new Error("Could not fetch comments");
   }
 }
 
-/////////////
-// CREATE
+export async function createUser(obj) {
+  try {
+    const user = await axios({
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(obj),
+      url: "https://interactive-comment-backend.vercel.app/api/v2/users",
+    });
 
-export async function createGuest(newGuest) {
-  console.log(newGuest);
-  const { data, error } = await supabase.from("guests").insert([newGuest]);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Guest could not be created");
+    return user;
+  } catch {
+    throw new Error("user could not be created");
   }
-
-  return data;
 }
 
-export async function createBooking(newBooking) {
-  const { data, error } = await supabase
-    .from("bookings")
-    .insert([newBooking])
-    // So that the newly created object gets returned!
-    .select()
-    .single();
+export async function getUserByEmail(email) {
+  try {
+    const res = await fetch(
+      `https://interactive-comment-backend.vercel.app/api/v2/users/user/${email}`
+    );
+    const user = res.json();
 
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be created");
+    return user;
+  } catch {
+    throw new Error("user could not be found");
   }
-
-  return data;
 }
 
-/////////////
-// UPDATE
+export async function createComment(obj) {
+  try {
+    const comment = await axios.post(
+      "https://interactive-comment-backend.vercel.app/api/v2/comments",
+      obj
+    );
 
-// The updatedFields is an object which should ONLY contain the updated data
-
-export async function updateGuest(id, updatedFields) {
-  const { data, error } = await supabase
-    .from("guests")
-    .update(updatedFields)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Guest could not be updated");
+    return comment;
+  } catch {
+    throw new Error("comment could not be created");
   }
-  return data;
+}
+// export async function createComment(obj) {
+//   console.log(obj.content);
+//   try {
+//     const comment = await axios({
+//       method: "post",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       data: JSON.stringify(obj),
+//       url: "https://interactive-comment-backend.vercel.app/api/v2/comments",
+//     });
+
+//     return comment;
+//   } catch {
+//     throw new Error("comment could not be created");
+//   }
+// }
+
+export async function replyComment(obj) {
+  try {
+    const reply = await axios({
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(obj),
+      url: `https://interactive-comment-backend.vercel.app/api/v2/comments/${obj.commentID}/replies`,
+    });
+    return reply;
+  } catch {
+    throw new Error("reply could not be created");
+  }
 }
 
-export async function updateBooking(id, updatedFields) {
-  const { data, error } = await supabase
-    .from("bookings")
-    .update(updatedFields)
-    .eq("id", id)
-    .select()
-    .single();
+export async function updateComment(obj) {
+  try {
+    const comment = await axios.patch(
+      `https://interactive-comment-backend.vercel.app/api/v2/comments/${obj.commentID}`,
+      { content: obj.content }
+    );
 
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be updated");
+    return comment;
+  } catch {
+    throw new Error("comment could not be updated");
   }
-  return data;
 }
 
-/////////////
-// DELETE
+export async function updateReply(obj) {
+  try {
+    const reply = await axios.patch(
+      `https://interactive-comment-backend.vercel.app/api/v2/replies/${obj.commentID}`,
+      { content: obj.content }
+    );
 
-export async function deleteBooking(id) {
-  const { data, error } = await supabase.from("bookings").delete().eq("id", id);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be deleted");
+    return reply;
+  } catch {
+    throw new Error("comment could not be updated");
   }
-  return data;
+}
+
+export async function deleteComment(id) {
+  console.log(id);
+  try {
+    const comment = await axios.delete(
+      `https://interactive-comment-backend.vercel.app/api/v2/comments/${id}`
+    );
+
+    return comment;
+  } catch {
+    throw new Error("check your route");
+  }
+}
+
+export async function deleteReply(id) {
+  console.log(id);
+  try {
+    const reply = await axios.delete(
+      `https://interactive-comment-backend.vercel.app/api/v2/replies/${id}`
+    );
+
+    return reply;
+  } catch {
+    throw new Error("check your route");
+  }
 }

@@ -7,6 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "200px",
+        sm: "480px",
+        md: "768px",
+        lg: "976px",
+        xl: "1440px",
+        maxmd: { max: "976px" },
+        maxsm: { max: "768px" },
+        mobile: { max: "976px" },
+      },
       colors: {
         primary: {
           50: "#E1E8EF",
@@ -20,6 +30,15 @@ module.exports = {
           800: "#2C3D4F",
           900: "#1B2631",
           950: "#141C24",
+          "moderate-blue": "#5457b6",
+          "soft-red": "#ed6468",
+          "light-blue": "#c3c4ef",
+          "pale-red": "#ffb8bb",
+          "dark-blue": "#324152",
+          "gray-blue": "#67727e",
+          "light-gray": "#eaecf1",
+          "very-light-gray": "#f5f6fa",
+          white: "#ffffff",
         },
         accent: {
           50: "#FAF5F0",

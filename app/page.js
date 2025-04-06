@@ -1,31 +1,41 @@
 import Image from "next/image";
-
 import Link from "next/link";
-import bg from "@/public/bg.png";
+import { getComments } from "./_lib/data-service";
+import { auth } from "./_lib/auth";
+import PostCommentForm from "./_components/PostCommentForm";
+import CommentBox from "./_components/CommentBox";
+import { Suspense } from "react";
+import Spinner from "./_components/Spinner";
 
-export default function Page() {
+export default async function Page() {
+  const comments = await getComments();
+  const user = await auth();
+  const userEmail = user?.user?.email;
   return (
     <main className="mt-24">
-      <Image
-        src={bg}
-        fill
-        quality={80}
-        placeholder="blur"
-        className="object-cover object-top"
-        alt="Mountains and forests with two cabins"
-      />
-
-      <div className="relative z-10 text-center">
-        <h1 className="text-8xl text-primary-50 mb-10 tracking-tight font-normal">
-          Welcome to paradise.
-        </h1>
-        <Link
-          href="/cabins"
-          className="bg-accent-500 px-8 py-6 text-primary-800 text-lg font-semibold hover:bg-accent-600 transition-all"
-        >
-          Explore luxury cabins
-        </Link>
-      </div>
+      <ul className=" w-2/3 mx-auto h-auto">
+        {comments?.map((com, i) => (
+          <Suspense fallback={<Spinner />} key={i}>
+            <CommentBox
+              key={i}
+              comment={com}
+              user={user}
+              userEmail={userEmail}
+            />
+          </Suspense>
+        ))}
+        {user ? (
+          <PostCommentForm user={user?.user} />
+        ) : (
+          <p className="text-primary-dark-blue text-xl text-center">
+            <span>Please</span>{" "}
+            <span className="text-primary-moderate-blue font-bold">
+              <Link href="/api/auth/signin"> sign-in</Link>
+            </span>
+            <span> to comment...☺</span>
+          </p>
+        )}
+      </ul>
     </main>
   );
 }
