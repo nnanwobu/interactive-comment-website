@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
           <Toaster position="bottom-right" />
           <Header />
           <div className="flex-1 px-8 pt-0 pb-8">
-            <main className="max-w-6xl mx-auto">
+            <main className=" mx-auto">
               <RangeProvider>{children}</RangeProvider>
             </main>
           </div>
