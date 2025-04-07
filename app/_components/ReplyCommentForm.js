@@ -13,12 +13,15 @@ export default function ReplyCommentForm({ user, comment, setIsOpen }) {
     <div className="bg-white ml-16 relative mobile:ml-5">
       <button
         className="text-red-500 absolute top-1 right-6 px-1 py-0 text-xl"
-        onClick={() => setIsOpen(false)}
+        onClick={(e) => {
+          e.preventDefault();
+          setIsOpen(false);
+        }}
       >
         X
       </button>
       <form
-        className="flex gap-4 bg-white rounded-md mt-4 p-8 mb-2 mobile:px-2 "
+        className="flex gap-4 bg-white rounded-md mt-4 p-8 mb-2 mobile:px-2 mobil:gap-2 items-center"
         action={replycomment}
       >
         <img
