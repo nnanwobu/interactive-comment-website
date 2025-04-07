@@ -10,7 +10,7 @@ export default function ReplyCommentForm({ user, comment, setIsOpen }) {
   const { replyTo, setReplyTo } = useReplyTo();
   const [isEmpty, setIsEmpty] = useState(`@${replyTo} `);
   return (
-    <div className="bg-white ml-16 relative">
+    <div className="bg-white ml-16 relative mobile:ml-5">
       <button
         className="text-red-500 absolute top-1 right-6 px-1 py-0 text-xl"
         onClick={() => setIsOpen(false)}
