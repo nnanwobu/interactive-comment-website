@@ -34,7 +34,10 @@ export default function ReplyCommentForm({ user, comment, setIsOpen }) {
           autoFocus={true}
           name="content"
           defaultValue={isEmpty}
-          onFocus={() => setReplyTo(comment.user[0].name)}
+          onFocus={(e) => {
+            e.target.value = "";
+            e.target.value = isEmpty;
+          }}
           onChange={(e) => setIsEmpty(e.target.value)}
         ></textarea>
         <input type="text" name="commentID" value={comment._id} hidden />
