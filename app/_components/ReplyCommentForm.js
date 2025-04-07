@@ -18,13 +18,13 @@ export default function ReplyCommentForm({ user, comment, setIsOpen }) {
         X
       </button>
       <form
-        className="flex gap-4 bg-white rounded-md mt-4 p-8 mb-2 "
+        className="flex gap-4 bg-white rounded-md mt-4 p-8 mb-2 mobile:px-2 "
         action={replycomment}
       >
         <img
           src={user.image}
           alt="user photo"
-          className="rounded-full w-[40px] h-[40px]"
+          className="rounded-full w-[40px] h-[40px] mobile:w-[20px] mobile:h-[20px]"
         />
         <textarea
           className=" w-5/6 text-black px-4 py-1 max-h-[100%] text-inherit border outline-primary-light-blue"
