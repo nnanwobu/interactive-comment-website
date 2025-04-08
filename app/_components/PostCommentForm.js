@@ -8,16 +8,16 @@ import { useState } from "react";
 
 export default function PostCommentForm({ user }) {
   const [isEmpty, setIsEmpty] = useState("");
-  console.log(isEmpty.length);
+
   return (
     <form
-      className="flex gap-4 w-full bg-white rounded-md mt-4 p-8"
+      className="flex gap-4 w-full bg-white rounded-md mt-4 p-8 mobile:gap-2 mobile:p-2"
       action={postComment}
     >
       <img
         src={user.image}
         alt="user photo"
-        className="rounded-full w-[40px] h-[40px]"
+        className="rounded-full w-[40px] h-[40px] mobile:w-[20px] mobile:h-[20px]"
       />
       <textarea
         className="h-auto w-5/6 text-black px-4 py-1 "
