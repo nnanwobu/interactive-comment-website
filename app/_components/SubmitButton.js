@@ -6,7 +6,7 @@ export default function SubmitButton({ text, isEmpty }) {
   const { pending } = useFormStatus();
   return (
     <button
-      className="bg-primary-moderate-blue px-2 py-2 w-1/6 rounded-md text-primary-white hover:bg-primary-light-blue h-[40px] items-center mobile:text-xs transition-all"
+      className="bg-primary-moderate-blue px-2 py-2 w-1/6 rounded-md text-primary-white hover:bg-primary-light-blue h-[40px] items-center mobile:text-xs transition-all mobile:w-2/6"
       disabled={pending}
       hidden={isEmpty <= 0}
     >
