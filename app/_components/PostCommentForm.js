@@ -11,7 +11,7 @@ export default function PostCommentForm({ user }) {
 
   return (
     <form
-      className="flex gap-4 w-full bg-white rounded-md mt-4 p-8 mobile:gap-2 mobile:p-2"
+      className="flex gap-4 w-full bg-white rounded-md mt-4 p-8 mobile:gap-2 mobile:p-2 mobile:items-center"
       action={postComment}
     >
       <img
