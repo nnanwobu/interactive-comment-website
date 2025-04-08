@@ -23,21 +23,14 @@ const StyledConfirmDelete = styled.div`
   }
 `;
 
-function ConfirmDelete({
-  onCloseModal,
-  resourceName,
-  disabled,
-  id,
-  serverAction,
-  mode,
-}) {
-  function handleDelete() {
-    const result = deletecomment(id, mode);
+function ConfirmDelete({ onCloseModal, resourceName, disabled, id, mode }) {
+  async function handleDelete() {
+    const result = await deletecomment(id, mode);
     if (result?.err) {
       toast.error(result.err);
     } else {
       toast.success("record deleted successfully");
-      // onCloseModal();
+      onCloseModal();
     }
   }
   return (

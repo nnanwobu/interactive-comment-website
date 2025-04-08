@@ -1,45 +1,57 @@
 "use client";
 
 import { useState } from "react";
-import { deletecomment, updatecomment } from "../serverActions/actions";
 import { useFormStatus } from "react-dom";
 import { Modal, Open, Window } from "./Modal";
 import ConfirmDelete from "./ConfirmDelete";
 import toast from "react-hot-toast";
 import { formatDistanceFromNow } from "../_lib/helper";
 import TextareaAutosize from "react-textarea-autosize";
+
 import {
   ArrowUturnLeftIcon,
   PencilIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
+import { useReplyTo } from "../_lib/hooks/useReplyTo";
+import ReplyCommentForm from "./ReplyCommentForm";
 
 export default function CommentCard({
   comment,
-  classN,
+  classN = "",
   userEmail,
-  onclick,
   mode,
   user,
+  id,
 }) {
   const [isTrue, setIsTrue] = useState(false);
   const [isEmpty, setIsEmpty] = useState("");
   const [score, setScore] = useState(comment.score);
-
   const commentOwner = comment.user.find((c) => c.email === userEmail);
+  const { setReplyTo, curOpen, setCurOpen } = useReplyTo();
+
+  const isOpen = id === curOpen;
 
   function handleEnableText(e) {
     e.preventDefault();
+
     setIsTrue(!isTrue);
   }
+  async function handleUpdateComment(data) {
+    const result = await updatecomment(data);
+    handleEnableText();
 
-  function handle(e) {
-    e.preventDefault();
+    if (result?.error) toast.error(result?.error);
+    else {
+      toast.success("Record updated successfully");
+    }
   }
 
   return (
     <Modal>
-      <div className={classN}>
+      <div
+        className={`mb-4 p-6 mobile:mb-2 bg-primary-white text-primary-dark-blue rounded-sm relative auto mobile:px-6 mobile:pb-16 mobile:pt-6 h-auto ${classN}`}
+      >
         <div className="flex w-full justify-between  mb-3 pl-14 pr-4 mobile:pl-0">
           <div className="flex gap-4 items-center">
             <div className="rounded-full bg-green-300 w-[40px] h-[40px] relative">
@@ -93,7 +105,11 @@ export default function CommentCard({
           ) : (
             <button
               className="mr-0 text-primary-moderate-blue hover:text-primary-light-blue mobile:absolute mobile:bottom-0 mobile:right-0 mobile:m-4"
-              onClick={onclick}
+              onClick={(e) => {
+                setCurOpen(id);
+                setReplyTo(comment.user[0].name);
+              }}
+              disabled={isOpen}
               hidden={!userEmail}
             >
               <div className="flex gap-1 items-center text-primary-moderate-blue hover:text-primary-light-blue">
@@ -119,7 +135,7 @@ export default function CommentCard({
               -
             </button>
           </div>
-          <form action={updatecomment} className=" w-full h-auto">
+          <form action={handleUpdateComment} className=" w-full h-auto">
             <div className="flex flex-col gap-2 w-full">
               <TextareaAutosize
                 className="max-h-[300px] outline-primary-light-blue p-1 "
@@ -143,6 +159,13 @@ export default function CommentCard({
           </form>
         </div>
       </div>
+      {isOpen && (
+        <ReplyCommentForm
+          user={user}
+          comment={comment}
+          setCurOpen={setCurOpen}
+        />
+      )}
       <Window name="delete" widthsize="auto" sizetall="auto">
         <ConfirmDelete resourceName="comment" id={comment._id} mode={mode} />
       </Window>
