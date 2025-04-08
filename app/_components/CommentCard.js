@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useReplyTo } from "../_lib/hooks/useReplyTo";
 import ReplyCommentForm from "./ReplyCommentForm";
+import { updatecomment } from "../serverActions/actions";
 
 export default function CommentCard({
   comment,
