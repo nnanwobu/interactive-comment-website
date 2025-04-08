@@ -25,7 +25,7 @@ export default function ReplyCommentForm({ user, comment }) {
         X
       </button>
       <form
-        className="flex gap-4 bg-white rounded-md mt-4 p-8 mb-2 mobile:px-2 mobil:gap-2 items-center"
+        className="flex gap-4 bg-white rounded-md mt-4 p-8 mb-2 mobile:px-2 mobil:gap-2 items-center mobile:mr-6"
         action={handleReplyComment}
       >
         <img

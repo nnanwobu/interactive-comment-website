@@ -39,6 +39,7 @@ export default function CommentCard({
     setIsTrue(!isTrue);
   }
   async function handleUpdateComment(data) {
+    e.preventDefault();
     const result = await updatecomment(data);
     handleEnableText();
 
@@ -180,7 +181,7 @@ function Button({ isEmpty, text, hidden }) {
     <button
       disabled={pending}
       hidden={hidden || isEmpty <= 0}
-      className="bg-primary-moderate-blue px-2 py-2 w-1/6 rounded-md text-primary-white hover:bg-primary-light-blue self-end"
+      className="bg-primary-moderate-blue px-2 py-2 w-1/6 rounded-md text-primary-white hover:bg-primary-light-blue self-end mobile:mr-6"
     >
       {pending ? `${text}ing...` : `${text}e`}
     </button>
