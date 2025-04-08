@@ -38,8 +38,7 @@ export default function CommentCard({
 
     setIsTrue(!isTrue);
   }
-  async function handleUpdateComment(e, data) {
-    e.preventDefault();
+  async function handleUpdateComment(data) {
     const result = await updatecomment(data);
     handleEnableText();
 
