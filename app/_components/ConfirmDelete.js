@@ -24,7 +24,7 @@ const StyledConfirmDelete = styled.div`
 
   & div {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     align-items: center;
     justify-self: center;
     justify-content: space-between;
