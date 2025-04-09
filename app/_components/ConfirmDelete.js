@@ -29,7 +29,7 @@ const StyledConfirmDelete = styled.div`
     justify-self: center;
     justify-content: space-between;
     gap: 1.2rem;
-    width: 50vw;
+    /* width: 50vw; */
   }
 `;
 
