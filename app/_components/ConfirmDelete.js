@@ -5,8 +5,11 @@ import Btn from "./Btn";
 import toast from "react-hot-toast";
 import { deletecomment } from "../serverActions/actions";
 
+import SpinnerMini from "./SpinnerMini";
+import { useTransition } from "react";
+
 const StyledConfirmDelete = styled.div`
-  width: 40rem;
+  width: 50vw;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -14,24 +17,34 @@ const StyledConfirmDelete = styled.div`
   & p {
     color: #6b7280;
     margin-bottom: 1.2rem;
+    overflow-wrap: break-word;
+    justify-self: center;
+    width: 50vw;
   }
 
   & div {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-self: center;
+    justify-content: space-between;
     gap: 1.2rem;
+    width: 50vw;
   }
 `;
 
 function ConfirmDelete({ onCloseModal, resourceName, disabled, id, mode }) {
+  const [isPending, startTransition] = useTransition();
   async function handleDelete() {
-    const result = await deletecomment(id, mode);
-    if (result?.err) {
-      toast.error(result.err);
-    } else {
-      toast.success("record deleted successfully");
-      onCloseModal();
-    }
+    startTransition(async () => {
+      const result = await deletecomment(id, mode);
+      if (result?.err) {
+        toast.error(result.err);
+      } else {
+        toast.success("record deleted successfully");
+        onCloseModal();
+      }
+    });
   }
   return (
     <StyledConfirmDelete>
@@ -47,13 +60,21 @@ function ConfirmDelete({ onCloseModal, resourceName, disabled, id, mode }) {
         >
           Cancel
         </Btn>
+
         <Btn
           variation="danger"
           sizes="small"
           disabled={disabled}
           onClick={handleDelete}
         >
-          Delete
+          {isPending ? (
+            <span className="flex gap-1">
+              <SpinnerMini />
+              <span>del..</span>
+            </span>
+          ) : (
+            <span>Delete</span>
+          )}
         </Btn>
       </div>
     </StyledConfirmDelete>

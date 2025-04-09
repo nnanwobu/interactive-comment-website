@@ -10,7 +10,10 @@ export const formatDistanceFromNow = (dateStr) =>
     includeSeconds: true,
   })
     .replace("about ", "")
-    .replace("in", "");
+    .replace("in", "")
+    .replace("less than", "")
+    .replace("mute", "min")
+    .replace("second", "sec");
 
 export const getToday = function (options = {}) {
   const today = new Date();
