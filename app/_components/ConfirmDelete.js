@@ -49,7 +49,10 @@ function ConfirmDelete({ onCloseModal, resourceName, disabled, id, mode }) {
   return (
     <StyledConfirmDelete>
       <Heading as="h6">Delete {resourceName}</Heading>
-      <p>Are you sure you want to delete this {resourceName}</p>
+      <p>
+        Are you sure you want to delete this {resourceName} permanently. This
+        action can not be reversed ☹
+      </p>
 
       <div style={{ display: "flex", justifyContent: "start" }}>
         <Btn
