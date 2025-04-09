@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { postComment } from "../serverActions/actions";
 
 import SubmitButton from "./SubmitButton";
@@ -21,7 +20,7 @@ export default function PostCommentForm({ user }) {
       />
       <textarea
         className="h-auto w-5/6 text-black px-4 py-1 "
-        autoFocus={true}
+        // autoFocus={true}
         name="content"
         placeholder="Add comment..."
         onChange={(e) => setIsEmpty(e.target.value)}

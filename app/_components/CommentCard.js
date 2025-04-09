@@ -16,6 +16,7 @@ import {
 import { useReplyTo } from "../_lib/hooks/useReplyTo";
 import ReplyCommentForm from "./ReplyCommentForm";
 import { updatecomment } from "../serverActions/actions";
+import { useRef } from "react";
 
 export default function CommentCard({
   comment,
@@ -30,12 +31,18 @@ export default function CommentCard({
   const [score, setScore] = useState(comment.score);
   const commentOwner = comment.user.find((c) => c.email === userEmail);
   const { setReplyTo, curOpen, setCurOpen } = useReplyTo();
-
   const isOpen = id === curOpen;
+  const textareaRef = useRef(null);
+
+  function focusTextarea() {
+    textareaRef.current.focus();
+    // textareaRef.current.focus();
+    // textareaRef.current.style.outline = "1px solid blue";
+  }
 
   function handleEnableText(e) {
     e.preventDefault();
-
+    textareaRef.current.focus();
     setIsTrue(!isTrue);
   }
   async function handleUpdateComment(data) {
@@ -93,7 +100,13 @@ export default function CommentCard({
               </Open>
 
               {isTrue ? (
-                <button onClick={() => setIsTrue(!isTrue)}>cancel</button>
+                <button
+                  onClick={() => {
+                    setIsTrue(!isTrue);
+                  }}
+                >
+                  cancel
+                </button>
               ) : (
                 <button onClick={handleEnableText}>
                   <div className="flex gap-1 items-center text-primary-moderate-blue hover:text-primary-light-blue">
@@ -139,13 +152,13 @@ export default function CommentCard({
           <form action={handleUpdateComment} className=" w-full h-auto">
             <div className="flex flex-col gap-2 w-full">
               <TextareaAutosize
+                ref={textareaRef}
                 className="max-h-[300px] outline-primary-light-blue p-1 "
-                disabled={!isTrue}
-                autoFocus={isTrue}
+                // autoFocus={!isTrue}
                 defaultValue={comment.content}
                 name="content"
-                placeholder="enter text here..."
                 onChange={(e) => setIsEmpty(e.target.value)}
+                disabled={!isTrue}
               />
               <input type="text" name="mode" hidden defaultValue={mode} />
               <input

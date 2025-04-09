@@ -88,7 +88,7 @@ export async function updateComment(obj) {
   try {
     const comment = await axios.patch(
       `https://interactive-comment-backend.vercel.app/api/v2/comments/${obj.commentID}`,
-      { content: obj.content }
+      { content: obj.content, updatedAt: new Date() }
     );
 
     return comment;
@@ -101,7 +101,7 @@ export async function updateReply(obj) {
   try {
     const reply = await axios.patch(
       `https://interactive-comment-backend.vercel.app/api/v2/replies/${obj.commentID}`,
-      { content: obj.content }
+      { content: obj.content, updatedAt: new Date() }
     );
 
     return reply;

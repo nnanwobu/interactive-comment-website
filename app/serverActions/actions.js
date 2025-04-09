@@ -16,7 +16,7 @@ import { redirect } from "next/navigation";
 export async function postComment(formData) {
   const session = await auth();
   const content = formData.get("content");
-  const obj = { content, user: session.user.id };
+  const obj = { content, user: session?.user?.id };
 
   try {
     await createComment(obj);

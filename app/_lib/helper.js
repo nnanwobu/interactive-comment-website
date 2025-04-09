@@ -7,6 +7,7 @@ export const subtractDates = (dateStr1, dateStr2) =>
 export const formatDistanceFromNow = (dateStr) =>
   formatDistance(parseISO(dateStr), new Date(), {
     addSuffix: true,
+    includeSeconds: true,
   })
     .replace("about ", "")
     .replace("in", "");
