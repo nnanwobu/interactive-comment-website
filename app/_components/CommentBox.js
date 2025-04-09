@@ -1,7 +1,7 @@
 "use client";
 import CommentCard from "./CommentCard";
 
-export default function CommentBox({ comment, user, userEmail }) {
+export default function CommentBox({ comment = {}, user, userEmail }) {
   return (
     <div>
       <CommentCard

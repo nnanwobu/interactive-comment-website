@@ -19,7 +19,7 @@ import { updatecomment } from "../serverActions/actions";
 import { useRef } from "react";
 
 export default function CommentCard({
-  comment,
+  comment = {},
   classN = "",
   userEmail,
   mode,

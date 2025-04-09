@@ -5,7 +5,7 @@ import { useReplyTo } from "../_lib/hooks/useReplyTo";
 import SubmitButton from "./SubmitButton";
 import { useState } from "react";
 
-export default function ReplyCommentForm({ user, comment }) {
+export default function ReplyCommentForm({ user, comment = {} }) {
   const { replyTo, setCurOpen, setReplyTo } = useReplyTo();
   const [isEmpty, setIsEmpty] = useState(`@${replyTo} `);
 
